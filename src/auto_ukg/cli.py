@@ -2,7 +2,7 @@ import click
 import subprocess
 from pathlib import Path
 
-from .action_modules import login, signin, signout
+from .action_modules import _login, _signin, _signout
 
 @click.group()
 def main():
@@ -22,8 +22,8 @@ def install_browsers():
 @main.command()
 def install_cron():
     """
-    Install cron jobs for 8:30 AM and 5:00 PM on weekdays
-    ."""
+    Install cron jobs for 8:30 AM and 5:00 PM on weekdays.
+    """
     
     python_path = subprocess.check_output(["which", "python3"]).decode().strip()
     signin_cmd = f"{python_path} -m auto_ukg signin"
@@ -58,21 +58,21 @@ def login():
     """
     Perform initial Okta login (manual)
     """
-    login()
+    _login()
 
 @main.command()
 def signin():
     """
     Automatically clock in
     """
-    signin()
+    _signin()
 
 @main.command()
 def signout():
     """
     Automatically clock out
     """
-    signout()
+    _signout()
 
 if __name__ == '__main__':
     main()

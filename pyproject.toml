@@ -1,6 +1,6 @@
 [project]
 name = "auto_ukg"
-version = "0.1.0"
+version = "0.1.2"
 description = "Automated tool for interacting with UKG Dimensions"
 authors = [
     { name="Chris" }

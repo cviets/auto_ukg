@@ -16,7 +16,7 @@ def load_cookies():
         return json.loads(COOKIES_FILE.read_text())
     return None
 
-def login():
+def _login():
     with sync_playwright() as p:
         browser = p.firefox.launch(headless=False)
         context = browser.new_context()
@@ -35,7 +35,7 @@ def login():
 
         browser.close()
 
-def signin():
+def _signin():
     with sync_playwright() as p:
         browser = p.firefox.launch(headless=True)
         context = browser.new_context()
@@ -68,7 +68,7 @@ def signin():
         print(f"{formatted_datetime}    Signed in")
         browser.close()
 
-def signout():
+def _signout():
     with sync_playwright() as p:
         browser = p.firefox.launch(headless=True)
         context = browser.new_context()
@@ -91,7 +91,11 @@ def signout():
         # Did you have at least a 30 minute lunch break?
         frame.locator("[id=\"workflowRadioGroup1_0\"]").check()
         frame.get_by_role("button", name="Submit answer").click()
+        time.sleep(5)
 
+        iframe_element = page.locator("[id=\"angularIframeSlider\"]")
+        frame = iframe_element.content_frame
+        
         # Are the sign-in and sign-out times you submitted accurate?
         frame.locator("[id=\"workflowRadioGroup1_0\"]").check()
         frame.get_by_role("button", name="Submit answer").click()
