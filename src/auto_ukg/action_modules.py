@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import time
+from datetime import datetime
 
 OKTA_APP_URL = "https://partnershealthcare.okta.com/app/partnershealthcare_ukgwdayprod_1/exkudz8l8l6XLkLBu297/sso/saml"
 UKG_URL = "https://massgeneral-ukgssosso.prd.mykronos.com/wfd/home"
@@ -29,7 +30,8 @@ def login():
 
         cookies = context.cookies()
         save_cookies(cookies)
-        print("Cookies saved.")
+        formatted_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"{formatted_datetime}    Cookies saved")
 
         browser.close()
 
@@ -62,6 +64,8 @@ def signin():
         # wait for submission to go through
          # page.wait_for_load_state("load")
         time.sleep(5)
+        formatted_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"{formatted_datetime}    Signed in")
         browser.close()
 
 def signout():
@@ -76,7 +80,7 @@ def signout():
 
         print(f"Navigating to: {UKG_URL}")
         page.goto(UKG_URL)
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("domcontentloaded")
 
         # Click "Sign Out" button
         page.locator("[id=\"52\"]").click()
@@ -95,4 +99,6 @@ def signout():
         # wait for submission to go through
          # page.wait_for_load_state("load")
         time.sleep(5)
+        formatted_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"{formatted_datetime}    Signed out")
         browser.close()

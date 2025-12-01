@@ -28,7 +28,7 @@ def install_cron():
     python_path = subprocess.check_output(["which", "python3"]).decode().strip()
     signin_cmd = f"{python_path} -m auto_ukg signin"
     signout_cmd = f"{python_path} -m auto_ukg signout"
-    log_file = Path.home() / ".mywebtool.log"
+    log_file = Path.home() / ".auto_ukg.log"
 
     cron_entry = (
         f"30 8 * * 1-5 {signin_cmd} >> {log_file} 2>&1\n"

@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-mywebtool = "auto_ukg.cli:main"
+auto_ukg = "auto_ukg.cli:main"
 
 [build-system]
 requires = ["setuptools>=61", "wheel"]
