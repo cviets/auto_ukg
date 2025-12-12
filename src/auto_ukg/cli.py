@@ -67,29 +67,41 @@ def reset_cron():
         f"{(0+offset)%60} {17 if offset >= 0 else 16} * * 1-5 {signout_cmd} >> {log_file} 2>&1\n"
     )
 
-    # Read existing crontab
-    existing = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
-    current_cron = existing.stdout if existing.returncode == 0 else ""
+    # # Read existing crontab
+    # existing = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+    # current_cron = existing.stdout if existing.returncode == 0 else ""
 
-    # Delete existing signin/out entries
-    if "signin.sh" in current_cron and "signout.sh" in current_cron:
+    # # Delete existing signin/out entries
+    # if "signin.sh" in current_cron and "signout.sh" in current_cron:
 
-        crontab_output = subprocess.Popen(["crontab", "-l"], stdout=subprocess.PIPE)
-        non_signin = subprocess.Popen(["grep", "-v", "'signin.sh'"], stdin=crontab_output.stdout, stdout=subprocess.PIPE)
-        non_signin_signout = subprocess.Popen(["grep", "-v", "'signout.sh'"], stdin=non_signin.stdout, stdout=subprocess.DEVNULL)
-        p = subprocess.Popen(["crontab"], stdin=subprocess.PIPE, text=True)
-        # bytes_data = non_signin_signout.stdout.read()
-        # string_data = bytes_data.decode('utf-8')
-        # print(string_data)
-        p.communicate(non_signin_signout.stdout)
+    #     crontab_output = subprocess.Popen(["crontab", "-l"], stdout=subprocess.PIPE)
+    #     non_signin = subprocess.Popen(["grep", "-v", "signin.sh"], stdin=crontab_output.stdout, stdout=subprocess.PIPE)
+    #     non_signin_signout = subprocess.Popen(["grep", "-v", "signout.sh"], stdin=non_signin.stdout, stdout=subprocess.PIPE)
+    #     p = subprocess.Popen(["crontab"], stdin=subprocess.PIPE, text=True)
+    #     cleaned = non_signin_signout.communicate()[0]  # bytes
+    #     p = subprocess.Popen(["crontab"], stdin=subprocess.PIPE)
+    #     p.communicate(cleaned)
 
-    # Read existing crontab
-    existing = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
-    current_cron = existing.stdout if existing.returncode == 0 else ""
+    # # Read existing crontab
+    # existing = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+    # current_cron = existing.stdout if existing.returncode == 0 else ""
 
-    new_cron = current_cron + "\n" + cron_entry
+    # new_cron = current_cron + "\n" + cron_entry
 
-    # Install new crontab
+    # # Install new crontab
+    # p = subprocess.Popen(["crontab"], stdin=subprocess.PIPE, text=True)
+    # p.communicate(new_cron)
+
+    result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+    lines = result.stdout.splitlines()
+
+    cleaned = [
+        line for line in lines
+        if "signin.sh" not in line and "signout.sh" not in line
+    ]
+
+    new_cron = "\n".join(cleaned) + "\n" + cron_entry
+
     p = subprocess.Popen(["crontab"], stdin=subprocess.PIPE, text=True)
     p.communicate(new_cron)
 
