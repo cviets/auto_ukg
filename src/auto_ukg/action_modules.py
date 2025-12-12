@@ -19,15 +19,24 @@ def load_cookies():
 def _login():
     # TODO: automate login
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=False)
+        browser = p.firefox.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
 
         print("Opening Okta login page...")
         page.goto(OKTA_APP_URL)
+        page.wait_for_load_state("domcontentloaded")
+        time.sleep(5)
 
-        page.wait_for_load_state("networkidle")
-        input("Press ENTER *after* you are logged in and pages have finished redirecting...")
+        # input("Press ENTER *after* you are logged in and pages have finished redirecting...")
+        # print("Press ENTER *after* you are logged in and pages have finished redirecting...")
+        page.get_by_role("textbox", name="Username").click()
+        page.get_by_role("textbox", name="Username").fill("cv1036")
+        page.get_by_role("textbox", name="Password").click()
+        page.get_by_role("textbox", name="Password").fill("RU*zzwBv2HY8hCp")
+        page.get_by_role("button", name="Sign in").click()
+        page.locator("div").nth(2).click()
+        page.locator("body").press("Enter")
 
         cookies = context.cookies()
         save_cookies(cookies)
