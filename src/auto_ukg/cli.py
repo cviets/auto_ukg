@@ -55,9 +55,9 @@ def reset_cron():
     Add cron jobs for 8:30 AM and 5:00 PM on weekdays, +/- a few minutes
     """
     
-    python_path = subprocess.check_output(["which", "python3"]).decode().strip()
-    signin_cmd = f"{python_path} auto_ukg signin"
-    signout_cmd = f"{python_path} auto_ukg signout"
+    cron_scripts_path = "/home/cviets/Documents/auto_ukg/cron_scripts/"
+    signin_cmd = f"{cron_scripts_path}signin.sh"
+    signout_cmd = f"{cron_scripts_path}signout.sh"
     log_file = Path.home() / ".auto_ukg.log"
 
     offset = random.randint(-29, 29)
@@ -72,12 +72,15 @@ def reset_cron():
     current_cron = existing.stdout if existing.returncode == 0 else ""
 
     # Delete existing signin/out entries
-    if "auto_ukg signin" in current_cron and "auto_ukg signout" in current_cron:
+    if "signin.sh" in current_cron and "signout.sh" in current_cron:
 
         crontab_output = subprocess.Popen(["crontab", "-l"], stdout=subprocess.PIPE)
-        non_signin = subprocess.Popen(["grep", "-v", "'auto_ukg signin'"], stdin=crontab_output.stdout, stdout=subprocess.PIPE)
-        non_signin_signout = subprocess.Popen(["grep", "-v", "'auto_ukg signout'"], stdin=non_signin.stdout, stdout=subprocess.DEVNULL)
+        non_signin = subprocess.Popen(["grep", "-v", "'signin.sh'"], stdin=crontab_output.stdout, stdout=subprocess.PIPE)
+        non_signin_signout = subprocess.Popen(["grep", "-v", "'signout.sh'"], stdin=non_signin.stdout, stdout=subprocess.DEVNULL)
         p = subprocess.Popen(["crontab"], stdin=subprocess.PIPE, text=True)
+        # bytes_data = non_signin_signout.stdout.read()
+        # string_data = bytes_data.decode('utf-8')
+        # print(string_data)
         p.communicate(non_signin_signout.stdout)
 
     # Read existing crontab
@@ -109,6 +112,7 @@ def signin():
         _signin()
     except:
         _login()
+        signin()
 
 @main.command()
 def signout():
@@ -119,6 +123,7 @@ def signout():
         _signout()
     except:
         _login()
+        signout()
 
 if __name__ == '__main__':
     main()

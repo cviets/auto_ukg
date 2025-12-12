@@ -17,6 +17,7 @@ def load_cookies():
     return None
 
 def _login():
+    # TODO: automate login
     with sync_playwright() as p:
         browser = p.firefox.launch(headless=False)
         context = browser.new_context()
@@ -31,7 +32,7 @@ def _login():
         cookies = context.cookies()
         save_cookies(cookies)
         formatted_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"{formatted_datetime}    Cookies saved")
+        print(f"{formatted_datetime}    Cookies saved at {COOKIES_FILE.absolute()}")
 
         browser.close()
 
