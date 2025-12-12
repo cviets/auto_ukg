@@ -56,8 +56,8 @@ def reset_cron():
     """
     
     cron_scripts_path = "/home/cviets/Documents/auto_ukg/cron_scripts/"
-    signin_cmd = f"{cron_scripts_path}signin.sh"
-    signout_cmd = f"{cron_scripts_path}signout.sh"
+    signin_cmd = f"bash {cron_scripts_path}signin.sh"
+    signout_cmd = f"bash {cron_scripts_path}signout.sh"
     log_file = Path.home() / ".auto_ukg.log"
 
     offset = random.randint(-29, 29)
